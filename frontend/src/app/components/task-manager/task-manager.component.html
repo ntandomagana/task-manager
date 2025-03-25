@@ -1,0 +1,22 @@
+<div class="container task-container flex justify-center items-center h-screen">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-[400px]">
+        <h1 class="text-2xl font-bold text-center mb-4">Task Manager</h1>
+
+        <div class="task-content space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Task Title</label>
+                <input type="text" (input)="onTitleChange($event)" class="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blgreen-500" placeholder="Enter task title">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Task Description</label>
+                <textarea [value]="task.description" (input)="onDescriptionChange($event)" class="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500" rows="3" placeholder="Enter task description"></textarea>
+            </div>
+
+            <button class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition" (click)="saveTask()">
+                Add Task
+            </button>
+        </div>
+    </div>
+</div>
+
