@@ -1,7 +1,11 @@
 package com.example.backend.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -19,7 +23,6 @@ public class Task {
         this.title = title;
         this.description = description;
     }
-
 
     public Long getId() {
         return id;

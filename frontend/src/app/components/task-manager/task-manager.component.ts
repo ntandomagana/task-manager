@@ -1,61 +1,64 @@
-import { Component, NgModule } from '@angular/core';
-import { Task } from '../../types/task.interface';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TaskService } from '../../services/task.service';
+import { CommonModule } from '@angular/common';
+import { Task } from '../../types/task.interface';
 
 @Component({
   selector: 'app-task-manager',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './task-manager.component.html',
-  styleUrl: './task-manager.component.css'
+  styleUrl: './task-manager.component.css',
 })
 export class TaskManagerComponent {
-onDescriptionChange($event: Event) {
-  this.task.description =( $event.target as HTMLInputElement).value;
+  taskForm: FormGroup;
+  tasks: Task[] = [];
 
-}
-onTitleChange($event: Event) {
-  this.task.title =( $event.target as HTMLInputElement).value;
+  constructor(private fb: FormBuilder, private taskService: TaskService) {
+    this.taskForm = this.fb.group({
+      title: [''],
+      description: [''],
+    });
 
-}
-
-
-
-  task: Task = { 
-    id: 0,
-    title: '',
-    description: ''
+   
   }
 
-  constructor(private taskService: TaskService) {}
+  ngOnInit() {
+    this.getTasks(); 
+  }
 
+  getTasks(){
+    this.taskService.getAllTasks().subscribe({
+      next: (res) => {
+        this.tasks = res;
+            }
 
+    })
 
-   saveTask(){
+  }
 
-    if(!this.task.title.trim() || !this.task.description.trim()) {
-      alert("Please enter a task");
+  saveTask() {
+    if (this.taskForm.invalid) {
+      alert('Please enter a task');
       return;
     }
 
-    console.log(this.task)
 
-    this.taskService.createTask(this.task).subscribe({
-      next:(res) => {
-        console.log('Tasksaved:', res);
-        alert('Tasl successfully added');
-        this.task = { id:0, title: '', description: ''}
+    const newTask: Task = this.taskForm.value;
+
+    console.log(this.taskForm.value);
+
+    this.taskService.createTask(this.taskForm.value).subscribe({
+      next: (res) => {
+        console.log('Task saved:', res);
+        alert('Task successfully added');
+        this.taskForm.reset();
       },
-
       error: (err) => {
         console.error('Error saving task:', err);
         alert('Failed to save task. Please try again.');
-      }
-    })
-
-   
-    
-
+      },
+    });
   }
-
 }
